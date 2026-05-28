@@ -226,6 +226,15 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
     setRecentActivities((prev) => prev.slice(0, maxLen));
   }, [activities.length, setRecentActivities]);
 
+  // On mount, orient the wheel so the saved selection is centered under the pointer
+  useEffect(() => {
+    if (!activitySelection || activities.length === 0) return;
+    const index = activities.indexOf(activitySelection);
+    if (index === -1) return;
+    const sliceAngle = (2 * Math.PI) / activities.length;
+    rotationRef.current = -(index * sliceAngle + sliceAngle / 2);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     drawWheel();
   }, [drawWheel]);
