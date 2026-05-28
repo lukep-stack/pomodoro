@@ -11,6 +11,7 @@ import {
   activityListAtom,
   activitySelectionAtom,
   recentActivitiesAtom,
+  themeAtom,
 } from "../../atoms";
 import Button from "../Button/Button";
 import ActivitySettings from "../ActivitySettings/ActivitySettings";
@@ -30,15 +31,46 @@ const RAINBOW = [
   "#C77DFF",
 ];
 
+// Darker variants with sufficient contrast for white text (WCAG AA)
+const RAINBOW_DARK = [
+  "#B03030",
+  "#B85A10",
+  "#8A6E08",
+  "#1E7A40",
+  "#1A4E9E",
+  "#6A2E9E",
+];
+
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+function getHighlightedIndex(rotation: number, count: number): number {
+  if (count === 0) return -1;
+  const TWO_PI = 2 * Math.PI;
+  const sliceAngle = TWO_PI / count;
+  const normalized = ((-rotation % TWO_PI) + TWO_PI) % TWO_PI;
+  return Math.floor(normalized / sliceAngle) % count;
+}
+
+function brighten(hex: string, amount: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const nr = Math.min(255, Math.round(r + (255 - r) * amount));
+  const ng = Math.min(255, Math.round(g + (255 - g) * amount));
+  const nb = Math.min(255, Math.round(b + (255 - b) * amount));
+  return `rgb(${nr},${ng},${nb})`;
+}
 
 const SPIN_DURATION = 2000;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
   const [activities] = useAtom(activityListAtom);
-  const [activitySelection, setActivitySelection] = useAtom(activitySelectionAtom);
+  const [activitySelection, setActivitySelection] = useAtom(
+    activitySelectionAtom,
+  );
   const [recentActivities, setRecentActivities] = useAtom(recentActivitiesAtom);
+  const [theme] = useAtom(themeAtom);
   const [showSettings, setShowSettings] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -56,39 +88,72 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
     const cx = size / 2;
     const cy = size / 2;
     const radius = size / 2 - 4;
+    const isDark = theme === "dark";
 
     ctx.clearRect(0, 0, size, size);
 
     if (activities.length === 0) {
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fillStyle = "#e0e0e0";
+      ctx.fillStyle = isDark ? "#2a2a2a" : "#e0e0e0";
       ctx.fill();
-      ctx.fillStyle = "#999";
+      ctx.fillStyle = isDark ? "#888" : "#999";
       ctx.font = "14px system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("Add activities below", cx, cy);
-      drawPointer(ctx, cx, size);
+      drawPointer(ctx, cx, size, isDark);
       return;
     }
 
     const sliceAngle = (2 * Math.PI) / activities.length;
     const rotation = rotationRef.current;
+    const palette = isDark ? RAINBOW_DARK : RAINBOW;
+    const dividerColor = isDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.6)";
+    const textColor = isDark ? "rgba(255,255,255,0.92)" : "rgba(0,0,0,0.75)";
+    const hlIndex = getHighlightedIndex(rotation, activities.length);
 
+    // Pass 1: fill all non-highlighted slices
+    for (let i = 0; i < activities.length; i++) {
+      if (i === hlIndex) continue;
+      const startAngle = rotation + i * sliceAngle - Math.PI / 2;
+      const endAngle = startAngle + sliceAngle;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, radius, startAngle, endAngle);
+      ctx.closePath();
+      ctx.fillStyle = palette[i % palette.length];
+      ctx.fill();
+    }
+
+    // Pass 2: highlighted slice last so its glow bleeds onto neighbors
+    {
+      const startAngle = rotation + hlIndex * sliceAngle - Math.PI / 2;
+      const endAngle = startAngle + sliceAngle;
+      const baseColor = palette[hlIndex % palette.length];
+      const lightColor = RAINBOW[hlIndex % RAINBOW.length];
+      ctx.save();
+      ctx.shadowColor = isDark ? lightColor : brighten(lightColor, 0.45);
+      ctx.shadowBlur = 28;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, radius, startAngle, endAngle);
+      ctx.closePath();
+      ctx.fillStyle = brighten(baseColor, 0.18);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Pass 3: dividers and labels on top of all fills
     for (let i = 0; i < activities.length; i++) {
       const startAngle = rotation + i * sliceAngle - Math.PI / 2;
       const endAngle = startAngle + sliceAngle;
-      const color = RAINBOW[i % RAINBOW.length];
 
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, radius, startAngle, endAngle);
       ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-
-      ctx.strokeStyle = "rgba(255,255,255,0.6)";
+      ctx.strokeStyle = dividerColor;
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
@@ -100,29 +165,28 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
       ctx.save();
       ctx.translate(tx, ty);
       ctx.rotate(midAngle + Math.PI / 2);
-      ctx.fillStyle = "rgba(0,0,0,0.75)";
+      ctx.fillStyle = textColor;
       ctx.font = `bold ${clampFontSize(activities.length)}px system-ui, sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-
-      const label = truncate(activities[i], 12);
-      ctx.fillText(label, 0, 0);
+      ctx.fillText(truncate(activities[i], 12), 0, 0);
       ctx.restore();
     }
 
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(0,0,0,0.12)";
+    ctx.strokeStyle = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)";
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    drawPointer(ctx, cx, size);
-  }, [activities]);
+    drawPointer(ctx, cx, size, isDark);
+  }, [activities, theme]);
 
   function drawPointer(
     ctx: CanvasRenderingContext2D,
     cx: number,
     size: number,
+    isDark: boolean,
   ) {
     const tipY = 18;
     const baseY = 2;
@@ -132,15 +196,15 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
     ctx.lineTo(cx - halfBase, baseY);
     ctx.lineTo(cx + halfBase, baseY);
     ctx.closePath();
-    ctx.fillStyle = "#1a1a1a";
+    ctx.fillStyle = isDark ? "#ffffff" : "#1a1a1a";
     ctx.fill();
     void size;
   }
 
   function clampFontSize(count: number): number {
-    if (count <= 4) return 13;
-    if (count <= 8) return 11;
-    return 9;
+    if (count <= 4) return 16;
+    if (count <= 8) return 14;
+    return 12;
   }
 
   function truncate(s: string, max: number): string {
@@ -205,7 +269,13 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
     };
 
     rafRef.current = requestAnimationFrame(animate);
-  }, [activities, drawWheel, setActivitySelection, recentActivities, setRecentActivities]);
+  }, [
+    activities,
+    drawWheel,
+    setActivitySelection,
+    recentActivities,
+    setRecentActivities,
+  ]);
 
   useImperativeHandle(ref, () => ({ spin }), [spin]);
 
@@ -256,7 +326,9 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
         </Tooltip>
       </div>
 
-      {showSettings && <ActivitySettings onClose={() => setShowSettings(false)} />}
+      {showSettings && (
+        <ActivitySettings onClose={() => setShowSettings(false)} />
+      )}
     </>
   );
 });

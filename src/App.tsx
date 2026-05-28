@@ -184,9 +184,7 @@ export default function App() {
             durations={durations}
             onSave={newDurations => {
               setDurations(newDurations)
-              setSecondsLeft(newDurations[mode])
-              setIsRunning(false)
-              saveTimer(mode, newDurations[mode], false)
+              saveTimer(mode, secondsLeft, isRunning)
             }}
             onClose={() => setShowSettings(false)}
           />
