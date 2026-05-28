@@ -9,7 +9,12 @@ interface SessionDotsProps {
   secondsLeft?: number;
 }
 
-export default function SessionDots({ count, onReset, isActive, secondsLeft = 0 }: SessionDotsProps) {
+export default function SessionDots({
+  count,
+  onReset,
+  isActive,
+  secondsLeft = 0,
+}: SessionDotsProps) {
   const filled = count > 0 && count % 4 === 0 ? 4 : count % 4;
   const [animDelay, setAnimDelay] = useState(0);
 
@@ -30,18 +35,22 @@ export default function SessionDots({ count, onReset, isActive, secondsLeft = 0 
             <span
               key={i}
               className={`session-dot${i < filled ? " session-dot--filled" : ""}${isActive && i === filled && filled < 4 ? " session-dot--active" : ""}`}
-              style={isActive && i === filled && filled < 4 ? { animationDelay: `-${animDelay}s` } : undefined}
+              style={
+                isActive && i === filled && filled < 4
+                  ? { animationDelay: `-${animDelay}s` }
+                  : undefined
+              }
             />
           ))}
         </div>
       </Tooltip>
       {/* {count > 0 && ( */}
       <div className="session-dots-reset-container">
-        <Tooltip text="Reset session count">
+        <Tooltip text="Reset progress">
           <button
             className="session-dots-reset"
             onClick={onReset}
-            aria-label="Reset session count"
+            aria-label="Reset progress"
           >
             ↺
           </button>
