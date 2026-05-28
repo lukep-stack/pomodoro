@@ -1,0 +1,130 @@
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.settings-panel {
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 32px;
+  width: 340px;
+  max-width: calc(100vw - 40px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.settings-panel h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: -0.3px;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  justify-content: flex-end;
+}
+
+.chore-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  margin-bottom: 4px;
+}
+
+.chore-empty {
+  font-size: 14px;
+  color: var(--color-text-placeholder);
+  text-align: center;
+  padding: 12px 0;
+}
+
+.chore-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: var(--color-surface-subtle);
+  border-radius: 8px;
+  gap: 8px;
+}
+
+.chore-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chore-name:hover {
+  text-decoration: underline;
+}
+
+.chore-drag-handle {
+  cursor: grab;
+  color: var(--color-drag-handle);
+  font-size: 16px;
+  padding: 0 4px;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+  touch-action: none;
+}
+
+.chore-drag-handle:hover {
+  color: var(--color-drag-handle-hover);
+}
+
+.chore-drag-handle:active {
+  cursor: grabbing;
+}
+
+.chore-inline-input {
+  flex: 1;
+  min-width: 0;
+  padding: 2px 6px;
+  border: 2px solid var(--color-border-focus);
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--color-surface);
+  color: var(--color-text);
+  outline: none;
+}
+
+.chore-add-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.chore-input {
+  flex: 1;
+  padding: 7px 12px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.18s;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.chore-input:focus {
+  border-color: var(--color-border-focus);
+}

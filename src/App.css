@@ -1,0 +1,61 @@
+.app {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  min-height: 100%;
+  padding: 48px 40px;
+  gap: 24px;
+  align-items: start;
+  transition: background 0.8s ease;
+  padding-top: 15vh;
+}
+
+.app[data-mode="pomodoro"] {
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(150, 60, 0, 0.5) 0%,
+    transparent 70%
+  );
+}
+
+.app[data-mode="shortBreak"] {
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(0, 100, 60, 0.4) 0%,
+    transparent 70%
+  );
+}
+
+.app[data-mode="longBreak"] {
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(40, 40, 140, 0.5) 0%,
+    transparent 70%
+  );
+}
+
+.app-panel--left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.timer-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.app-panel--right {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+@media (max-width: 700px) {
+  .app {
+    grid-template-columns: auto;
+  }
+}

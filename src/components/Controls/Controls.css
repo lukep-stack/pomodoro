@@ -1,0 +1,33 @@
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.controls__play {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-text);
+  color: var(--color-bg);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.controls__play:hover {
+  opacity: 0.85;
+}
+
+.controls__play:active {
+  transform: scale(0.95);
+}
+
+.controls__play svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}

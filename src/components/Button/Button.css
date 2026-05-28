@@ -1,0 +1,123 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s,
+    transform 0.1s;
+}
+
+/* ── Sizes ── */
+
+.btn--lg {
+  padding: 14px 44px;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.btn--md {
+  padding: 8px 20px;
+  font-size: 15px;
+}
+
+.btn--sm {
+  padding: 8px 20px;
+  font-size: 14px;
+}
+
+.btn--xs {
+  padding: 2px 4px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* ── Circle shape (icon buttons) ── */
+
+.btn--circle {
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.btn--circle svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* ── Solid dark ── */
+
+.btn--solid.btn--dark {
+  background: var(--color-text);
+  color: var(--color-bg);
+  border: none;
+}
+
+.btn--solid.btn--dark:hover {
+  opacity: 0.85;
+}
+
+.btn--solid.btn--dark:active {
+  transform: scale(0.97);
+}
+
+/* ── Outline dark ── */
+
+.btn--outline.btn--dark {
+  background: transparent;
+  border: 2px solid var(--color-text);
+  color: var(--color-text);
+}
+
+.btn--outline.btn--dark:hover {
+  background: var(--color-surface-hover);
+}
+
+.btn--outline.btn--dark.btn--active {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+/* ── Outline gray ── */
+
+.btn--outline.btn--gray {
+  background: transparent;
+  border: 2px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.btn--outline.btn--gray:hover {
+  border-color: var(--color-border-strong);
+}
+
+/* ── Ghost dark ── */
+
+.btn--ghost.btn--dark {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+}
+
+.btn--ghost.btn--dark:hover {
+  background: var(--color-surface-hover);
+}
+
+/* ── Ghost danger ── */
+
+.btn--ghost.btn--danger {
+  background: transparent;
+  border: none;
+  color: var(--color-drag-handle);
+}
+
+.btn--ghost.btn--danger:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
