@@ -1,26 +1,26 @@
-.chore-wheel-section {
+.activity-wheel-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
 }
 
-.chore-wheel-wrapper {
+.activity-wheel-wrapper {
   position: relative;
 }
 
-.chore-wheel-canvas {
+.activity-wheel-canvas {
   display: block;
   cursor: pointer;
   border-radius: 50%;
   transition: transform 0.08s;
 }
 
-.chore-wheel-canvas:hover {
+.activity-wheel-canvas:hover {
   transform: scale(1.02);
 }
 
-.chore-selection {
+.activity-selection {
   font-size: 32px;
   font-weight: 600;
   letter-spacing: -0.2px;

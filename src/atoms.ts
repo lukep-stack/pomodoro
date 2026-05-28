@@ -15,7 +15,7 @@ export const durationsAtom = atomWithStorage<Durations>(
   DEFAULT_DURATIONS,
 );
 
-export const DEFAULT_CHORES = [
+export const DEFAULT_ACTIVITIES = [
   "Nap",
   "Walk",
   "Clean",
@@ -24,15 +24,15 @@ export const DEFAULT_CHORES = [
   "Dishes",
 ];
 
-export const choreListAtom = atomWithStorage<string[]>(
+export const activityListAtom = atomWithStorage<string[]>(
   "pomodoro-chores",
-  DEFAULT_CHORES,
+  DEFAULT_ACTIVITIES,
 );
-export const choreSelectionAtom = atomWithStorage<string | null>(
+export const activitySelectionAtom = atomWithStorage<string | null>(
   "pomodoro-chore-selection",
   null,
 );
-export const recentChoresAtom = atomWithStorage<string[]>(
+export const recentActivitiesAtom = atomWithStorage<string[]>(
   "pomodoro-recent-chores",
   [],
 );

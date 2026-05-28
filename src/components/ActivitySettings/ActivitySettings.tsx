@@ -15,17 +15,17 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { choreListAtom } from "../../atoms";
+import { activityListAtom } from "../../atoms";
 import Button from "../Button/Button";
-import "./ChoreSettings.css";
+import "./ActivitySettings.css";
 
-interface ChoreSettingsProps {
+interface ActivitySettingsProps {
   onClose: () => void;
 }
 
-interface SortableChoreItemProps {
+interface SortableActivityItemProps {
   id: number;
-  chore: string;
+  activity: string;
   isEditing: boolean;
   editingValue: string;
   onStartEdit: () => void;
@@ -35,9 +35,9 @@ interface SortableChoreItemProps {
   onRemove: () => void;
 }
 
-function SortableChoreItem({
+function SortableActivityItem({
   id,
-  chore,
+  activity,
   isEditing,
   editingValue,
   onStartEdit,
@@ -45,7 +45,7 @@ function SortableChoreItem({
   onEditKeyDown,
   onCommitEdit,
   onRemove,
-}: SortableChoreItemProps) {
+}: SortableActivityItemProps) {
   const {
     attributes,
     listeners,
@@ -62,14 +62,14 @@ function SortableChoreItem({
   };
 
   return (
-    <div className="chore-item" ref={setNodeRef} style={style}>
-      <span className="chore-drag-handle" {...attributes} {...listeners}>
+    <div className="activity-item" ref={setNodeRef} style={style}>
+      <span className="activity-drag-handle" {...attributes} {...listeners}>
         ⠿
       </span>
 
       {isEditing ? (
         <input
-          className="chore-inline-input"
+          className="activity-inline-input"
           value={editingValue}
           onChange={(e) => onEditChange(e.target.value)}
           onKeyDown={onEditKeyDown}
@@ -79,11 +79,11 @@ function SortableChoreItem({
         />
       ) : (
         <span
-          className="chore-name"
+          className="activity-name"
           onClick={onStartEdit}
           title="Click to edit"
         >
-          {chore}
+          {activity}
         </span>
       )}
 
@@ -92,7 +92,7 @@ function SortableChoreItem({
         size="xs"
         color="danger"
         onClick={onRemove}
-        aria-label={`Remove ${chore}`}
+        aria-label={`Remove ${activity}`}
       >
         ✕
       </Button>
@@ -100,8 +100,8 @@ function SortableChoreItem({
   );
 }
 
-export default function ChoreSettings({ onClose }: ChoreSettingsProps) {
-  const [chores, setChores] = useAtom(choreListAtom);
+export default function ActivitySettings({ onClose }: ActivitySettingsProps) {
+  const [activities, setActivities] = useAtom(activityListAtom);
   const [inputValue, setInputValue] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState("");
@@ -110,26 +110,26 @@ export default function ChoreSettings({ onClose }: ChoreSettingsProps) {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
 
-  const choreIds = chores.map((_, i) => i);
+  const activityIds = activities.map((_, i) => i);
 
   function handleDragEnd({ active, over }: DragEndEvent) {
     if (!over || active.id === over.id) return;
-    setChores((prev) =>
+    setActivities((prev) =>
       arrayMove(prev, active.id as number, over.id as number),
     );
   }
 
   function startEdit(i: number) {
     setEditingIndex(i);
-    setEditingValue(chores[i]);
+    setEditingValue(activities[i]);
   }
 
   function commitEdit() {
     if (editingIndex === null) return;
     const trimmed = editingValue.trim();
     if (trimmed) {
-      setChores((prev) =>
-        prev.map((c, i) => (i === editingIndex ? trimmed : c)),
+      setActivities((prev) =>
+        prev.map((a, i) => (i === editingIndex ? trimmed : a)),
       );
     }
     setEditingIndex(null);
@@ -146,20 +146,20 @@ export default function ChoreSettings({ onClose }: ChoreSettingsProps) {
     if (e.key === "Escape") cancelEdit();
   }
 
-  const addChore = () => {
+  const addActivity = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
-    setChores((prev) => [...prev, trimmed]);
+    setActivities((prev) => [...prev, trimmed]);
     setInputValue("");
   };
 
-  const removeChore = (index: number) => {
-    setChores((prev) => prev.filter((_, i) => i !== index));
+  const removeActivity = (index: number) => {
+    setActivities((prev) => prev.filter((_, i) => i !== index));
     if (editingIndex === index) cancelEdit();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") addChore();
+    if (e.key === "Enter") addActivity();
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -171,9 +171,9 @@ export default function ChoreSettings({ onClose }: ChoreSettingsProps) {
       <div className="settings-panel">
         <h2>Break Activities</h2>
 
-        <div className="chore-list">
-          {chores.length === 0 && (
-            <p className="chore-empty">No chores yet. Add some below!</p>
+        <div className="activity-list">
+          {activities.length === 0 && (
+            <p className="activity-empty">No activities yet. Add some below!</p>
           )}
           <DndContext
             sensors={sensors}
@@ -181,31 +181,31 @@ export default function ChoreSettings({ onClose }: ChoreSettingsProps) {
             onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={choreIds}
+              items={activityIds}
               strategy={verticalListSortingStrategy}
             >
-              {chores.map((chore, i) => (
-                <SortableChoreItem
+              {activities.map((activity, i) => (
+                <SortableActivityItem
                   key={i}
                   id={i}
-                  chore={chore}
+                  activity={activity}
                   isEditing={editingIndex === i}
                   editingValue={editingValue}
                   onStartEdit={() => startEdit(i)}
                   onEditChange={setEditingValue}
                   onEditKeyDown={handleEditKeyDown}
                   onCommitEdit={commitEdit}
-                  onRemove={() => removeChore(i)}
+                  onRemove={() => removeActivity(i)}
                 />
               ))}
             </SortableContext>
           </DndContext>
         </div>
 
-        <div className="chore-add-row">
+        <div className="activity-add-row">
           <input
             type="text"
-            className="chore-input"
+            className="activity-input"
             placeholder="New activity..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -213,7 +213,7 @@ export default function ChoreSettings({ onClose }: ChoreSettingsProps) {
             maxLength={40}
             autoFocus={editingIndex === null}
           />
-          <Button variant="solid" size="sm" color="dark" onClick={addChore}>
+          <Button variant="solid" size="sm" color="dark" onClick={addActivity}>
             Add
           </Button>
         </div>

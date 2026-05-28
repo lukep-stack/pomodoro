@@ -9,14 +9,18 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  padding: 8px;
+}
+
+.session-dots-reset-container {
+  position: absolute;
+  right: -24px;
 }
 
 .session-dots-reset {
-  position: absolute;
-  right: -24px;
   background: none;
   border: none;
-  padding: 0 2px;
+  padding: 6px;
   cursor: pointer;
   color: var(--color-text-muted);
   font-size: 14px;

@@ -6,11 +6,21 @@
   padding: 48px 40px;
   gap: 24px;
   align-items: start;
-  transition: background 0.8s ease;
   padding-top: 15vh;
+  position: relative;
+  isolation: isolate;
 }
 
-.app[data-mode="pomodoro"] {
+.app-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.app-bg--pomodoro {
   background: radial-gradient(
     ellipse at bottom,
     rgba(150, 60, 0, 0.5) 0%,
@@ -18,7 +28,7 @@
   );
 }
 
-.app[data-mode="shortBreak"] {
+.app-bg--shortBreak {
   background: radial-gradient(
     ellipse at bottom,
     rgba(0, 100, 60, 0.4) 0%,
@@ -26,12 +36,18 @@
   );
 }
 
-.app[data-mode="longBreak"] {
+.app-bg--longBreak {
   background: radial-gradient(
     ellipse at bottom,
     rgba(40, 40, 140, 0.5) 0%,
     transparent 70%
   );
+}
+
+.app[data-mode="pomodoro"] .app-bg--pomodoro,
+.app[data-mode="shortBreak"] .app-bg--shortBreak,
+.app[data-mode="longBreak"] .app-bg--longBreak {
+  opacity: 1;
 }
 
 .app-panel--left {

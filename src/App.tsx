@@ -7,7 +7,7 @@ import TimerDisplay from './components/TimerDisplay/TimerDisplay'
 import Controls from './components/Controls/Controls'
 import Settings from './components/Settings/Settings'
 import SessionDots from './components/SessionDots/SessionDots'
-import ChoreWheel, { type ChoreWheelHandle } from './components/ChoreWheel/ChoreWheel'
+import ActivityWheel, { type ActivityWheelHandle } from './components/ActivityWheel/ActivityWheel'
 import { playChime, unlockAudio } from './chime'
 import { requestNotificationPermission, sendNotification } from './notifications'
 import type { Mode } from './types'
@@ -68,7 +68,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const wheelRef = useRef<ChoreWheelHandle>(null)
+  const wheelRef = useRef<ActivityWheelHandle>(null)
   const didMountRef = useRef(false)
 
   // Always-fresh completion handler — reads current state via closure
@@ -137,7 +137,7 @@ export default function App() {
     saveTimer(mode, durations[mode], false)
   }
 
-  // Auto-spin chore wheel when a break timer starts (skip on initial mount to avoid re-spinning on reload)
+  // Auto-spin activity wheel when a break timer starts (skip on initial mount to avoid re-spinning on reload)
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true
@@ -157,6 +157,9 @@ export default function App() {
 
   return (
     <div className="app" data-mode={mode}>
+      <div className="app-bg app-bg--pomodoro" />
+      <div className="app-bg app-bg--shortBreak" />
+      <div className="app-bg app-bg--longBreak" />
       <div className="app-panel app-panel--left">
         <div className="timer-row">
           <TimerDisplay secondsLeft={secondsLeft} totalSeconds={durations[mode]} />
@@ -172,7 +175,7 @@ export default function App() {
       </div>
 
       <div className="app-panel app-panel--right">
-        <ChoreWheel ref={wheelRef} />
+        <ActivityWheel ref={wheelRef} />
       </div>
 
       <AnimatePresence>

@@ -31,7 +31,7 @@
   justify-content: flex-end;
 }
 
-.chore-list {
+.activity-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -40,14 +40,14 @@
   margin-bottom: 4px;
 }
 
-.chore-empty {
+.activity-empty {
   font-size: 14px;
   color: var(--color-text-placeholder);
   text-align: center;
   padding: 12px 0;
 }
 
-.chore-item {
+.activity-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -57,7 +57,7 @@
   gap: 8px;
 }
 
-.chore-name {
+.activity-name {
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text);
@@ -69,11 +69,11 @@
   cursor: pointer;
 }
 
-.chore-name:hover {
+.activity-name:hover {
   text-decoration: underline;
 }
 
-.chore-drag-handle {
+.activity-drag-handle {
   cursor: grab;
   color: var(--color-drag-handle);
   font-size: 16px;
@@ -84,15 +84,15 @@
   touch-action: none;
 }
 
-.chore-drag-handle:hover {
+.activity-drag-handle:hover {
   color: var(--color-drag-handle-hover);
 }
 
-.chore-drag-handle:active {
+.activity-drag-handle:active {
   cursor: grabbing;
 }
 
-.chore-inline-input {
+.activity-inline-input {
   flex: 1;
   min-width: 0;
   padding: 2px 6px;
@@ -106,13 +106,13 @@
   outline: none;
 }
 
-.chore-add-row {
+.activity-add-row {
   display: flex;
   gap: 8px;
   margin-top: 14px;
 }
 
-.chore-input {
+.activity-input {
   flex: 1;
   padding: 7px 12px;
   border: 2px solid var(--color-border);
@@ -125,6 +125,6 @@
   color: var(--color-text);
 }
 
-.chore-input:focus {
+.activity-input:focus {
   border-color: var(--color-border-focus);
 }
