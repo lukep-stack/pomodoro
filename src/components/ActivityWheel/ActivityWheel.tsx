@@ -169,7 +169,7 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
       ctx.font = `bold ${clampFontSize(activities.length)}px system-ui, sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(truncate(activities[i], 12), 0, 0);
+      ctx.fillText(truncate(activities[i], maxCharsForSlice(activities.length)), 0, 0);
       ctx.restore();
     }
 
@@ -205,6 +205,16 @@ const ActivityWheel = forwardRef<ActivityWheelHandle, {}>((_props, ref) => {
     if (count <= 4) return 16;
     if (count <= 8) return 14;
     return 12;
+  }
+
+  function maxCharsForSlice(count: number): number {
+    const r = 350 / 2 - 4;
+    const textRadius = r * 0.85;
+    const sliceAngle = (2 * Math.PI) / count;
+    const chord = 2 * textRadius * Math.sin(sliceAngle / 2);
+    const fontSize = clampFontSize(count);
+    const charWidth = fontSize * 0.58;
+    return Math.max(3, Math.floor((chord * 0.72) / charWidth));
   }
 
   function truncate(s: string, max: number): string {
