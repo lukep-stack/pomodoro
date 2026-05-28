@@ -38,9 +38,29 @@
   height: 8px;
   border-radius: 50%;
   background: var(--color-border-strong);
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .session-dot--filled {
   background: var(--color-text);
+}
+
+@keyframes ping {
+  0%   {
+    background: color-mix(in srgb, var(--ping-glow-color) 50%, var(--color-border-strong));
+    box-shadow: 0 0 0 0px color-mix(in srgb, var(--color-text) 60%, transparent);
+  }
+  70%  {
+    background: var(--color-border-strong);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-text) 0%, transparent);
+  }
+  100% {
+    background: var(--color-border-strong);
+    box-shadow: 0 0 0 0px color-mix(in srgb, var(--color-text) 0%, transparent);
+  }
+}
+
+.session-dot--active {
+  transition: none;
+  animation: ping 2s ease-out infinite;
 }

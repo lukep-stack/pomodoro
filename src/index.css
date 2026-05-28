@@ -13,6 +13,7 @@
   --color-drag-handle-hover: #888;
   --color-danger: #e55;
   --color-danger-bg: #fee;
+  --ping-glow-color: black;
 }
 
 [data-theme="dark"] {
@@ -30,6 +31,7 @@
   --color-drag-handle-hover: #aaa;
   --color-danger: #e55;
   --color-danger-bg: #3a1a1a;
+  --ping-glow-color: white;
 }
 
 *,

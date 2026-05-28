@@ -165,7 +165,7 @@ export default function App() {
           <TimerDisplay secondsLeft={secondsLeft} totalSeconds={durations[mode]} />
           <ModeSelector mode={mode} onChange={handleModeChange} />
         </div>
-        <SessionDots count={pomodoroCount} onReset={() => setPomodoroCount(0)} />
+        <SessionDots count={pomodoroCount} onReset={() => setPomodoroCount(0)} isActive={isRunning && mode === 'pomodoro'} secondsLeft={secondsLeft} />
         <Controls
           isRunning={isRunning}
           onToggle={toggleTimer}
